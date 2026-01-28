@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GaiaTrace - Zero Emission Hero</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 25%, #388e3c 50%, #43a047 75%, #66bb6a 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(76, 175, 80, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(46, 125, 50, 0.15) 0%, transparent 50%),
+                url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L55 25 L70 25 L58 35 L63 50 L50 40 L37 50 L42 35 L30 25 L45 25 Z" fill="%23ffffff" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 8px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #4caf50;
+        }
+
+        .language-selector select {
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1b5e20;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .language-selector select:focus {
+            outline: none;
+        }
+
+        .container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(232, 245, 233, 0.95) 100%);
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 650px;
+            width: 100%;
+            border: 3px solid #4caf50;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #4caf50, #66bb6a, #81c784, #4caf50);
+            border-radius: 25px;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .eco-ornament {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 50%, #66bb6a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 {
+            color: #1b5e20;
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 30px;
+            font-style: italic;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1b5e20;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #81c784;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+            background: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .secondary-btn {
+            background: linear-gradient(135deg, #43a047 0%, #66bb6a 100%);
+            box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
+        }
+
+        .secondary-btn:hover {
+            background: linear-gradient(135deg, #388e3c 0%, #43a047 100%);
+            box-shadow: 0 6px 20px rgba(67, 160, 71, 0.4);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #e65100 0%, #ff6f00 100%);
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(230, 81, 0, 0.3);
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #bf360c 0%, #e65100 100%);
+            box-shadow: 0 6px 20px rgba(230, 81, 0, 0.4);
+        }
+
+        .activity-list {
+            margin-top: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .activity-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .activity-list::-webkit-scrollbar-track {
+            background: #e8f5e9;
+            border-radius: 10px;
+        }
+
+        .activity-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            border-radius: 10px;
+        }
+
+        .activity-item {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            border-left: 5px solid #4caf50;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-item::before {
+            content: '🌱';
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 2em;
+            opacity: 0.2;
+        }
+
+        .activity-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .activity-category {
+            font-size: 13px;
+            color: #2e7d32;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .activity-name {
+            font-size: 19px;
+            color: #1b5e20;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .activity-points {
+            font-size: 15px;
+            color: #388e3c;
+            font-weight: 600;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #c62828;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #c62828;
+            box-shadow: 0 3px 10px rgba(198, 40, 40, 0.2);
+        }
+
+        .success {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #2e7d32;
+            box-shadow: 0 3px 10px rgba(46, 125, 50, 0.2);
+        }
+
+        .user-info {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 1.1em;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.1) 0%, rgba(76, 175, 80, 0.1) 100%);
+            border-radius: 12px;
+            border: 2px solid #c8e6c9;
+        }
+
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4caf50, transparent);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+
+        .section-title {
+            color: #1b5e20;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .eco-pattern {
+            text-align: center;
+            font-size: 1.8em;
+            margin: 20px 0;
+            color: #4caf50;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect">
+            <option value="en">🇬🇧 English</option>
+            <option value="tr">🇹🇷 Türkçe</option>
+            <option value="de">🇩🇪 Deutsch</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <div class="brand-header">
+            <div class="eco-ornament">🌍🌿🌍</div>
+            <div class="hero-icon">🛡️</div>
+            <h1 id="brandName">GaiaTrace</h1>
+            <p class="subtitle" id="slogan">Zero Emission Hero</p>
+        </div>
+
+        <div class="eco-pattern">🌱 ♻️ 🌳 ♻️ 🌱</div>
+
+        <!-- Auth Section -->
+        <div id="authSection">
+            <div id="message"></div>
+            
+            <div class="form-group">
+                <label for="email" id="emailLabel">Email</label>
+                <input type="email" id="email" placeholder="hero@gaia.earth" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" id="passwordLabel">Password</label>
+                <input type="password" id="password" placeholder="Minimum 6 characters" required>
+            </div>
+
+            <button id="loginBtn">Sign In</button>
+            <button id="registerBtn" class="secondary-btn">Create Account</button>
+        </div>
+
+        <!-- App Section -->
+        <div id="appSection" class="hidden">
+            <div class="user-info" id="userInfo"></div>
+            
+            <div id="message2"></div>
+
+            <h2 class="section-title" id="addActivityTitle">Add New Activity</h2>
+            
+            <div class="form-group">
+                <label for="category" id="categoryLabel">Category</label>
+                <select id="category">
+                    <option value="recycling">♻️ Recycling</option>
+                    <option value="energy">⚡ Energy Saving</option>
+                    <option value="food">🥗 Sustainable Food</option>
+                    <option value="transport">🚴 Green Transport</option>
+                    <option value="water">💧 Water Conservation</option>
+                    <option value="other">🌱 Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="activityName" id="activityNameLabel">Activity Name</label>
+                <input type="text" id="activityName" placeholder="e.g., Plastic bottle recycling" required>
+            </div>
+
+            <div class="form-group">
+                <label for="points" id="pointsLabel">Points</label>
+                <input type="number" id="points" placeholder="10" min="1" required>
+            </div>
+
+            <button id="addActivityBtn">Add Activity</button>
+
+            <div class="divider"></div>
+
+            <div class="activity-list" id="activityList"></div>
+
+            <button id="logoutBtn" class="logout-btn">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZ8N6MUUkt-eyI2rNRcYSVswpuKV7xBCU",
+            authDomain: "gaiatrace.firebaseapp.com",
+            projectId: "gaiatrace",
+            storageBucket: "gaiatrace.firebasestorage.app",
+            messagingSenderId: "439909329082",
+            appId: "1:439909329082:web:82c58c3994387f604f7a83",
+            measurementId: "G-VL5W9LCQFK"
+        };
+
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Translations
+        const translations = {
+            en: {
+                brandName: 'GaiaTrace',
+                slogan: 'Zero Emission Hero',
+                emailLabel: 'Email',
+                emailPlaceholder: 'hero@gaia.earth',
+                passwordLabel: 'Password',
+                passwordPlaceholder: 'Minimum 6 characters',
+                loginBtn: 'Sign In',
+                registerBtn: 'Create Account',
+                addActivityTitle: 'Add New Activity',
+                categoryLabel: 'Category',
+                activityNameLabel: 'Activity Name',
+                activityNamePlaceholder: 'e.g., Plastic bottle recycling',
+                pointsLabel: 'Points',
+                pointsPlaceholder: '10',
+                addActivityBtn: 'Add Activity',
+                logoutBtn: 'Sign Out',
+                userInfoPrefix: 'Welcome, ',
+                registerSuccess: 'Registration successful! Signing in...',
+                loginSuccess: 'Login successful!',
+                activitySuccess: 'Activity added successfully! 🌱',
+                fillAllFields: 'Please fill all fields!',
+                configError: 'Please configure Firebase settings!',
+                categories: {
+                    recycling: '♻️ Recycling',
+                    energy: '⚡ Energy Saving',
+                    food: '🥗 Sustainable Food',
+                    transport: '🚴 Green Transport',
+                    water: '💧 Water Conservation',
+                    other: '🌱 Other'
+                }
+            },
+            tr: {
+                brandName: 'GaiaTrace',
+                slogan: 'Sıfır Emisyon Savaşçısı',
+                emailLabel: 'E-posta',
+                emailPlaceholder: 'kahraman@gaia.earth',
+                passwordLabel: 'Şifre',
+                passwordPlaceholder: 'En az 6 karakter',
+                loginBtn: 'Giriş Yap',
+                registerBtn: 'Hesap Oluştur',
+                addActivityTitle: 'Yeni Aktivite Ekle',
+                categoryLabel: 'Kategori',
+                activityNameLabel: 'Aktivite Adı',
+                activityNamePlaceholder: 'Örn: Plastik şişe geri dönüşümü',
+                pointsLabel: 'Puan',
+                pointsPlaceholder: '10',
+                addActivityBtn: 'Aktivite Ekle',
+                logoutBtn: 'Çıkış Yap',
+                userInfoPrefix: 'Hoş geldin, ',
+                registerSuccess: 'Kayıt başarılı! Giriş yapılıyor...',
+                loginSuccess: 'Giriş başarılı!',
+                activitySuccess: 'Aktivite başarıyla eklendi! 🌱',
+                fillAllFields: 'Lütfen tüm alanları doldurun!',
+                configError: 'Lütfen Firebase ayarlarını yapın!',
+                categories: {
+                    recycling: '♻️ Geri Dönüşüm',
+                    energy: '⚡ Enerji Tasarrufu',
+                    food: '🥗 Sürdürülebilir Beslenme',
+                    transport: '🚴 Yeşil Ulaşım',
+                    water: '💧 Su Tasarrufu',
+                    other: '🌱 Diğer'
+                }
+            },
+            de: {
+                brandName: 'GaiaTrace',
+                slogan: 'Null-Emissions-Held',
+                emailLabel: 'E-Mail',
+                emailPlaceholder: 'held@gaia.earth',
+                passwordLabel: 'Passwort',
+                passwordPlaceholder: 'Mindestens 6 Zeichen',
+                loginBtn: 'Anmelden',
+                registerBtn: 'Konto erstellen',
+                addActivityTitle: 'Neue Aktivität hinzufügen',
+                categoryLabel: 'Kategorie',
+                activityNameLabel: 'Aktivitätsname',
+                activityNamePlaceholder: 'z.B., Plastikflaschen-Recycling',
+                pointsLabel: 'Punkte',
+                pointsPlaceholder: '10',
+                addActivityBtn: 'Aktivität hinzufügen',
+                logoutBtn: 'Abmelden',
+                userInfoPrefix: 'Willkommen, ',
+                registerSuccess: 'Registrierung erfolgreich! Anmeldung läuft...',
+                loginSuccess: 'Anmeldung erfolgreich!',
+                activitySuccess: 'Aktivität erfolgreich hinzugefügt! 🌱',
+                fillAllFields: 'Bitte alle Felder ausfüllen!',
+                configError: 'Bitte Firebase-Einstellungen konfigurieren!',
+                categories: {
+                    recycling: '♻️ Recycling',
+                    energy: '⚡ Energieeinsparung',
+                    food: '🥗 Nachhaltige Ernährung',
+                    transport: '🚴 Grüner Transport',
+                    water: '💧 Wasserschutz',
+                    other: '🌱 Andere'
+                }
+            }
+        };
+
+        let currentLang = 'en';
+
+        // DOM elements
+        const authSection = document.getElementById('authSection');
+        const appSection = document.getElementById('appSection');
+        const message = document.getElementById('message');
+        const message2 = document.getElementById('message2');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('userInfo');
+        const category = document.getElementById('category');
+        const activityName = document.getElementById('activityName');
+        const points = document.getElementById('points');
+        const addActivityBtn = document.getElementById('addActivityBtn');
+        const activityList = document.getElementById('activityList');
+        const languageSelect = document.getElementById('languageSelect');
+
+        // Update UI language
+        function updateLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            
+            document.getElementById('slogan').textContent = t.slogan;
+            document.getElementById('emailLabel').textContent = t.emailLabel;
+            email.placeholder = t.emailPlaceholder;
+            document.getElementById('passwordLabel').textContent = t.passwordLabel;
+            password.placeholder = t.passwordPlaceholder;
+            loginBtn.textContent = t.loginBtn;
+            registerBtn.textContent = t.registerBtn;
+            document.getElementById('addActivityTitle').textContent = t.addActivityTitle;
+            document.getElementById('categoryLabel').textContent = t.categoryLabel;
+            document.getElementById('activityNameLabel').textContent = t.activityNameLabel;
+            activityName.placeholder = t.activityNamePlaceholder;
+            document.getElementById('pointsLabel').textContent = t.pointsLabel;
+            points.placeholder = t.pointsPlaceholder;
+            addActivityBtn.textContent = t.addActivityBtn;
+            logoutBtn.textContent = t.logoutBtn;
+
+            // Update category options
+            const categoryOptions = category.querySelectorAll('option');
+            categoryOptions[0].textContent = t.categories.recycling;
+            categoryOptions[1].textContent = t.categories.energy;
+            categoryOptions[2].textContent = t.categories.food;
+            categoryOptions[3].textContent = t.categories.transport;
+            categoryOptions[4].textContent = t.categories.water;
+            categoryOptions[5].textContent = t.categories.other;
+        }
+
+        // Language selector
+        languageSelect.addEventListener('change', (e) => {
+            updateLanguage(e.target.value);
+        });
+
+        function showMessage(element, text, type = 'error') {
+            element.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => element.innerHTML = '', 4000);
+        }
+
+        function t(key) {
+            return translations[currentLang][key];
+        }
+
+        // Register
+        registerBtn.addEventListener('click', async () => {
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
+                showMessage(message, t('registerSuccess'), 'success');
+                email.value = '';
+                password.value = '';
+            } catch (error) {
+                showMessage(message, `Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Login
+        loginBtn.addEventListener('click', async () => {
+            try {
+                await signInWithEmailAndPassword(auth, email.value, password.value);
+                showMessage(message, t('loginSuccess'), 'success');
+                email.value = '';
+                password.value = '';
+            } catch (error) {
+                showMessage(message, `Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                showMessage(message2, `Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Add Activity
+        addActivityBtn.addEventListener('click', async () => {
+            try {
+                if (!activityName.value || !points.value) {
+                    showMessage(message2, t('fillAllFields'), 'error');
+                    return;
+                }
+
+                await addDoc(collection(db, 'activities'), {
+                    category: category.value,
+                    name: activityName.value,
+                    points: parseInt(points.value),
+                    userId: auth.currentUser.uid,
+                    createdAt: new Date()
+                });
+
+                showMessage(message2, t('activitySuccess'), 'success');
+                activityName.value = '';
+                points.value = '';
+                category.value = 'recycling';
+            } catch (error) {
+                showMessage(message2, `Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Auth state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authSection.classList.add('hidden');
+                appSection.classList.remove('hidden');
+                userInfo.textContent = t('userInfoPrefix') + user.email;
+                loadActivities();
+            } else {
+                authSection.classList.remove('hidden');
+                appSection.classList.add('hidden');
+                activityList.innerHTML = '';
+            }
+        });
+
+        // Load activities
+        function loadActivities() {
+            const q = query(collection(db, 'activities'), orderBy('createdAt', 'desc'));
+            onSnapshot(q, (snapshot) => {
+                activityList.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const item = document.createElement('div');
+                    item.className = 'activity-item';
+                    
+                    const categoryText = translations[currentLang].categories[data.category] || data.category;
+                    const pointsWord = currentLang === 'en' ? 'points' : currentLang === 'de' ? 'Punkte' : 'puan';
+                    
+                    item.innerHTML = `
+                        <div class="activity-category">${categoryText}</div>
+                        <div class="activity-name">${data.name}</div>
+                        <div class="activity-points">🌟 ${data.points} ${pointsWord}</div>
+                    `;
+                    activityList.appendChild(item);
+                });
+            });
+        }
+
+        // Initialize with English
+        updateLanguage('en');
+    </script>
+</body>
+</html>
